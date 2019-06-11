@@ -3,31 +3,31 @@
     <!-- 云盘 -->
     <div class="yun-file">
       <div class="pb35 mt20">
-          <div class="yun-file-title flex">
-            <text class="c0 f28 fwb">最近使用文档</text>
-            <text class="f24 c153 fw4 pl20 pt10 pb10" @click="yunFileMoreEvent">全部</text>
-          </div>
-          <div class="mt36 prl20 file-height">
-            <div class="flex" v-if='isShowRE'>
-              <scroller v-if='yunFileReleArr.length != 0' class="yun-scroller flex-dr" show-scrollbar='false'
-                scroll-direction="horizontal">
-                <div class="flex-ac file-name" v-for="(item, index) in yunFileReleArr" :key='index'
-                  @click='yunFileUserEvent(item.id)'>
-                  <bui-image :src="item.image" width="52px" height="52px"></bui-image>
-                  <div class="flex-jc flex-ac" style="width: 153px">
-                    <text class="f24 c51 fw4 mt17 lines2">{{item.name}}</text>
-                  </div>
+        <div class="yun-file-title flex">
+          <text class="c0 f28 fwb">{{i18n.RecentlyUsedFile}}</text>
+          <text class="f24 c153 fw4 pl20 pt10 pb10" @click="yunFileMoreEvent">{{i18n.All}}</text>
+        </div>
+        <div class="mt36 prl20 file-height">
+          <div class="flex" v-if='isShowRE'>
+            <scroller v-if='yunFileReleArr.length != 0' class="yun-scroller flex-dr" show-scrollbar='false'
+              scroll-direction="horizontal">
+              <div class="flex-ac file-name" v-for="(item, index) in yunFileReleArr" :key='index'
+                @click='yunFileUserEvent(item.id)'>
+                <bui-image :src="item.image" width="52px" height="52px"></bui-image>
+                <div class="flex-jc flex-ac" style="width: 153px">
+                  <text class="f24 c51 fw4 mt17 lines2 wwb">{{item.name}}</text>
                 </div>
-              </scroller>
-              <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
-                <div class="flex-dr">
-                  <bui-image src="/image/sleep1.png" width="42px" height="39px"></bui-image>
-                  <text class="f26 c51 fw4 pl15 center-height ">{{isErrorBM?'暂无文档':'加载失败'}}</text>
-                </div>
+              </div>
+            </scroller>
+            <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
+              <div class="flex-dr">
+                <bui-image src="/image/sleep1.png" width="42px" height="39px"></bui-image>
+                <text class="f26 c51 fw4 pl15 center-height ">{{isErrorBM?i18n.NoneData:i18n.ErrorLoadData}}</text>
               </div>
             </div>
           </div>
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -43,7 +43,8 @@
         yunFileReleArr: [],
         isErrorRele: true,
         isShowRE: false,
-        channel: new BroadcastChannel('WidgetsMessage')
+        channel: new BroadcastChannel('WidgetsMessage'),
+        i18n: '',
       }
     },
     methods: {
@@ -142,6 +143,11 @@
           });
         }, 100)
       }
+    },
+    created() {
+      linkapi.getLanguage((res) => {
+        this.i18n = this.$window[res]
+      })
     },
     mounted() {
       this.channel.onmessage = (event) => {
