@@ -93,6 +93,7 @@
             linkapi.get({
               url: params.diskUri + 'openapi//file/recent_used?limit=100',
             }).then((res) => {
+              this.$alert(res)
               this.isShowRE = true
               this.isErrorRele = true
               let fileArr = []
@@ -139,7 +140,6 @@
               widgetHeight: ret.size.height,
               id: _params.id
             });
-            channel.close();
           });
         }, 100)
       }
