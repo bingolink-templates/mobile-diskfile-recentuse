@@ -8,7 +8,7 @@ module.exports = {
     "zh-hk": {
         "RecentlyUsedFile": "最近使用文檔",
         "All": "更多",
-        "NoneData": "暫無檔案",
+        "NoneData": "暫無文檔",
         "ErrorLoadData": "加載失敗"
     },
     "en": {
