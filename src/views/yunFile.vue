@@ -4,7 +4,7 @@
         <div class="yun-file">
             <div class="pb35 mt20">
                 <div class="yun-file-title flex">
-                    <text class="c0 f28 fwb">{{i18n.RecentlyUsedFile}}</text>
+                    <text class="c0 f28 fw5">{{i18n.RecentlyUsedFile}}</text>
                     <text class="f24 c153 fw4 pl20 pt10 pb10" @click="yunFileMoreEvent">{{i18n.All}}</text>
                 </div>
                 <div class="mt36 prl20 file-height">
