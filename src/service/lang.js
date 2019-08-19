@@ -12,7 +12,7 @@ module.exports = {
         "ErrorLoadData": "加載失敗"
     },
     "en": {
-        "RecentlyUsedFile": "Recently used file",
+        "RecentlyUsedFile": "Recently Used File",
         "All": "More",
         "NoneData": "No archives data",
         "ErrorLoadData": "loading failed"

@@ -1,5 +1,5 @@
 <template>
-    <div ref="wrap" class="main">
+    <div ref="wrap">
         <!-- 云盘 -->
         <div class="yun-file">
             <div class="pb35 mt20">
@@ -11,8 +11,10 @@
                     <div class="flex" v-if='isShowRE'>
                         <scroller v-if='yunFileReleArr.length != 0' class="yun-scroller flex-dr" show-scrollbar='false'
                             scroll-direction="horizontal">
-                            <div class="flex-ac file-name"  v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id)'>
-                                <bui-image :src="item.image" width="52px" height="52px" @click='yunFileUserEvent(item.id)'></bui-image>
+                            <div class="flex-ac file-name" v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr"
+                                :key='index' @click='yunFileUserEvent(item.id)'>
+                                <bui-image :src="item.image" width="52px" height="52px"
+                                    @click='yunFileUserEvent(item.id)'></bui-image>
                                 <div class="flex-jc flex-ac" style="width: 153px">
                                     <text class="f24 c51 fw4 mt17 lines2 wwb">{{item.name}}</text>
                                 </div>
@@ -21,7 +23,8 @@
                         <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
                             <div class="flex-dr">
                                 <bui-image src="/image/sleep1.png" width="42px" height="39px"></bui-image>
-                                <text class="f26 c51 fw4 pl15 center-height ">{{isErrorBM?i18n.NoneData:i18n.ErrorLoadData}}</text>
+                                <text
+                                    class="f26 c51 fw4 pl15 center-height ">{{isErrorBM?i18n.NoneData:i18n.ErrorLoadData}}</text>
                             </div>
                         </div>
                     </div>
@@ -93,6 +96,7 @@
                         linkapi.get({
                             url: params.diskUri + 'openapi//file/recent_used?limit=100',
                         }).then((res) => {
+                            this.broadcastWidgetHeight()
                             this.isShowRE = true
                             this.isErrorRele = true
                             let fileArr = []
@@ -100,8 +104,7 @@
                             util.each(res.rows, function (row) {
                                 files = files.concat(row.fileList);
                             })
-                            for (let index = 0, resLength = files.length; index <
-                                resLength; index++) {
+                            for (let index = 0, resLength = files.length; index < resLength; index++) {
                                 let fileObj = {}
                                 const element = files[index];
                                 fileObj['name'] = element.name
@@ -116,7 +119,6 @@
                                 fileArr.push(fileObj)
                             }
                             this.yunFileReleArr = fileArr
-                            this.broadcastWidgetHeight()
                         }, (err) => {
                             this.isShowRE = true
                             this.isErrorRele = false
@@ -137,13 +139,13 @@
             broadcastWidgetHeight() {
                 let _params = this.$getPageParams();
                 setTimeout(() => {
-					dom.getComponentRect(this.$refs.wrap, (ret) => {
-						this.channel.postMessage({
-							widgetHeight: ret.size.height,
-							id: _params.id
-						});
-					});
-				}, 200)
+                    dom.getComponentRect(this.$refs.wrap, (ret) => {
+                        this.channel.postMessage({
+                            widgetHeight: ret.size.height,
+                            id: _params.id
+                        });
+                    });
+                }, 200)
             }
         },
         created() {
@@ -165,10 +167,6 @@
 
 <style lang="css" src="../css/common.css"></style>
 <style>
-    .main {
-        flex: 1;
-    }
-
     .yun-file {
         background-color: #fff;
     }
