@@ -20,7 +20,7 @@
                         <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
                             <div class="flex-dr">
                                 <bui-image src="/image/sleep1.png" width="21wx" height="21wx"></bui-image>
-                                <text class="f26 c51 fw4 pl15 center-height ">{{isErrorBM?i18n.NoneData:i18n.ErrorLoadData}}</text>
+                                <text class="f26 c51 fw4 pl15 center-height ">{{isErrorRele?i18n.NoneData:i18n.ErrorLoadData}}</text>
                             </div>
                         </div>
                     </div>
@@ -35,6 +35,7 @@ const link = weex.requireModule("LinkModule");
 const linkapi = require("linkapi");
 const dom = weex.requireModule('dom');
 const util = require('ser/util')
+const storage = weex.requireModule('storage');
 export default {
     data() {
         return {
@@ -45,8 +46,32 @@ export default {
             i18n: '',
         }
     },
+    created() {
+        this.$fixViewport();
+        linkapi.getLanguage((res) => {
+            this.i18n = this.$window[res]
+        })
+    },
+    mounted() {
+        this.channel.onmessage = (event) => {
+            if (event.data.action === 'RefreshData') {
+                this.getYunFile()
+            }
+        }
+        this.getYunFile()
+    },
     methods: {
-        // 
+        getStorage(callback) {
+            storage.getItem('yunFileJLocalData', res => {
+                if (res.result == 'success') {
+                    var data = JSON.parse(res.data)
+                    this.isShowRE = true
+                    this.isErrorRele = true
+                } else {
+                    callback()
+                }
+            })
+        },
         yunFileMoreEvent() {
             link.launchLinkService(['[OpenBuiltIn] \n key=MyDisk'], (res) => { }, (err) => { });
         },
@@ -93,27 +118,32 @@ export default {
                     linkapi.get({
                         url: url + '/openapi/file/list?path=%2FPrivate&bounds=%7B%22offset%22%3A0%2C%22limit%22%3A200%7D',
                     }).then((res) => {
-                        this.broadcastWidgetHeight()
-                        this.isShowRE = true
-                        this.isErrorRele = true
-                        let fileArr = [];
-                        let files = [];
-                        for (let index = 0, resLength = res.rows.length; index < resLength; index++) {
-                            let fileObj = {}
-                            const element = res.rows[index];
-                            fileObj['name'] = element.name
-                            fileObj['id'] = element.fileId
-                            if (element.type == 'D') {
-                                fileObj['isExitDoc'] = false
-                                fileObj['image'] = '/image/folder2.png'
-                                continue
-                            } else {
-                                fileObj['isExitDoc'] = true
-                                fileObj['image'] = this.getFileImages(element.extension)
+                        try {
+                            this.isShowRE = true
+                            this.isErrorRele = true
+                            let fileArr = [];
+                            let files = [];
+                            for (let index = 0, resLength = res.rows.length; index < resLength; index++) {
+                                let fileObj = {}
+                                const element = res.rows[index];
+                                fileObj['name'] = element.name
+                                fileObj['id'] = element.fileId
+                                if (element.type == 'D') {
+                                    fileObj['isExitDoc'] = false
+                                    fileObj['image'] = '/image/folder2.png'
+                                    continue
+                                } else {
+                                    fileObj['isExitDoc'] = true
+                                    fileObj['image'] = this.getFileImages(element.extension)
+                                }
+                                fileArr.push(fileObj)
                             }
-                            fileArr.push(fileObj)
+                            this.yunFileReleArr = fileArr
+                            storage.setItem('yunFileJLocalData', JSON.stringify(fileArr))
+                        } catch (error) {
+
                         }
-                        this.yunFileReleArr = fileArr
+                        this.broadcastWidgetHeight()
                     }, (err) => {
                         this.isShowRE = true
                         this.isErrorRele = false
@@ -131,31 +161,24 @@ export default {
             this.isErrorRele = false
             this.broadcastWidgetHeight()
         },
+        getComponentRect(_params) {
+            dom.getComponentRect(this.$refs.wrap, (ret) => {
+                this.channel.postMessage({
+                    widgetHeight: ret.size.height,
+                    id: _params.id
+                });
+            });
+        },
         broadcastWidgetHeight() {
             let _params = this.$getPageParams();
+            // 防止高度通知失败
             setTimeout(() => {
-                dom.getComponentRect(this.$refs.wrap, (ret) => {
-                    this.channel.postMessage({
-                        widgetHeight: ret.size.height,
-                        id: _params.id
-                    });
-                });
+                this.getComponentRect(_params)
             }, 200)
+            setTimeout(() => {
+                this.getComponentRect(_params)
+            }, 1200)
         }
-    },
-    created() {
-        this.$fixViewport();
-        linkapi.getLanguage((res) => {
-            this.i18n = this.$window[res]
-        })
-    },
-    mounted() {
-        this.channel.onmessage = (event) => {
-            if (event.data.action === 'RefreshData') {
-                this.getYunFile()
-            }
-        }
-        this.getYunFile()
     }
 }
 </script>
@@ -170,7 +193,6 @@ export default {
     height: 20wx;
     margin: 9wx 12wx 18wx 12wx;
 }
-
 
 .file-name {
     margin-right: 15px;
