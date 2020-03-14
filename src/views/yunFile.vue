@@ -2,19 +2,20 @@
     <div ref="wrap">
         <!-- 云盘 -->
         <div class="yun-file">
-            <div class="pb35 mt20">
-                <div class="yun-file-title flex">
-                    <text class="c0 f28 fw5">{{i18n.RecentlyUsedFile}}</text>
+            <div class="pb20">
+                <div class="yun-file-title flex" v-bind:style="{'height': $isIPad ? '44wx': '88px'}">
+                    <div class="title flex">
+                        <span class="line" v-bind:style="{'background-color': themeColor}"></span>
+                        <text class="c0 f30">{{i18n.RecentlyUsedFile}}</text>
+                    </div>
                     <text class="f24 c153 fw4 pl20 pt10 pb10" @click="yunFileMoreEvent">{{i18n.All}}</text>
                 </div>
-                <div class="mt36 prl20 file-height">
-                    <div class="flex" v-if='isShowRE'>
-                        <scroller v-if='yunFileReleArr.length != 0' class="yun-scroller flex-dr" show-scrollbar='false' scroll-direction="horizontal">
-                            <div class="flex-ac file-name" v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id)'>
+                <div class="prl30">
+                    <div v-if='isShowRE'>
+                        <scroller v-if='yunFileReleArr.length != 0' show-scrollbar='false' v-bind:style="{'height': $isIPad ? '200wx': '400px'}">
+                            <div class="flex-dr flex-ac" v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id)' v-bind:style="{'height': $isIPad ? '40wx': '80px'}">
                                 <bui-image :src="item.image" width="26wx" height="26wx" @click='yunFileUserEvent(item.id)'></bui-image>
-                                <div class="flex-jc flex-ac" style="width: 153px">
-                                    <text class="f24 c51 fw4 mt17 lines2 wwb">{{item.name}}</text>
-                                </div>
+                                <text class="f24 c51 fw4 pl20 lines1">{{item.name}}</text>
                             </div>
                         </scroller>
                         <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
@@ -44,6 +45,8 @@ export default {
             isShowRE: false,
             channel: new BroadcastChannel('WidgetsMessage'),
             i18n: '',
+            themeColor: '',
+            $isIPad: false,
         }
     },
     created() {
@@ -51,6 +54,10 @@ export default {
         linkapi.getLanguage((res) => {
             this.i18n = this.$window[res]
         })
+        linkapi.getThemeColor(res => {
+            this.themeColor = res.background_color;
+        })
+        this.$isIPad = this.$isIPad()
     },
     mounted() {
         this.channel.onmessage = (event) => {
@@ -121,9 +128,8 @@ export default {
                         try {
                             this.isShowRE = true
                             this.isErrorRele = true
-                            let fileArr = [];
-                            let files = [];
-                            for (let index = 0, resLength = res.rows.length; index < resLength; index++) {
+                            let fileArr = [], files = [];
+                            for (let index = 0; index < res.rows.length; index++) {
                                 let fileObj = {}
                                 const element = res.rows[index];
                                 fileObj['name'] = element.name
@@ -131,7 +137,6 @@ export default {
                                 if (element.type == 'D') {
                                     fileObj['isExitDoc'] = false
                                     fileObj['image'] = '/image/folder2.png'
-                                    continue
                                 } else {
                                     fileObj['isExitDoc'] = true
                                     fileObj['image'] = this.getFileImages(element.extension)
@@ -141,7 +146,6 @@ export default {
                             this.yunFileReleArr = fileArr
                             storage.setItem('yunFileJLocalData', JSON.stringify(fileArr))
                         } catch (error) {
-
                         }
                         this.broadcastWidgetHeight()
                     }, (err) => {
@@ -189,19 +193,15 @@ export default {
     background-color: #fff;
 }
 
+.line {
+    width: 5px;
+    height: 36px;
+    margin-right: 12px;
+}
+
 .yun-file-title {
-    height: 20wx;
-    margin: 9wx 12wx 18wx 12wx;
-}
-
-.file-name {
-    margin-right: 15px;
-    width: 166px;
-}
-
-.yun-scroller {
-    flex: 1;
-    height: 70wx;
+    padding: 0 12wx;
+    border-bottom: 1px solid #f2f2f2;
 }
 
 .no-file {
