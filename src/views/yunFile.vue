@@ -77,6 +77,7 @@ export default {
                     this.yunFileReleArr = data
                     this.isShowRE = true
                     this.isErrorRele = true
+                    this.broadcastWidgetHeight()
                 } else {
                     callback()
                 }
