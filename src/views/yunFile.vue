@@ -3,7 +3,7 @@
         <!-- 云盘 -->
         <div class="yun-file">
             <div class="pb20">
-                <div class="yun-file-title flex" v-bind:style="{'height': $isIPad ? '44wx': '88px'}">
+                <div class="yun-file-title flex" v-bind:style="{'height': $isIPad ? '44wx': '88px', 'margin-bottom': $isIPad ? '7wx': '15px'}">
                     <div class="title flex">
                         <span class="line" v-bind:style="{'background-color': themeColor}"></span>
                         <text class="c0 f30">{{i18n.RecentlyUsedFile}}</text>
