@@ -12,12 +12,12 @@
                 </div>
                 <div class="prl30">
                     <div v-if='isShowRE'>
-                        <scroller v-if='yunFileReleArr.length != 0' show-scrollbar='false' v-bind:style="{'height': $isIPad ? '200wx': '400px'}">
+                        <div v-if='yunFileReleArr.length != 0' v-bind:style="{'height': $isIPad ? '200wx': '400px'}">
                             <div class="flex-dr flex-ac" v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id)' v-bind:style="{'height': $isIPad ? '40wx': '80px'}">
                                 <bui-image :src="item.image" width="26wx" height="26wx" @click='yunFileUserEvent(item.id)'></bui-image>
                                 <text class="f24 c51 fw4 pl20 lines1">{{item.name}}</text>
                             </div>
-                        </scroller>
+                        </div>
                         <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
                             <div class="flex-dr">
                                 <bui-image src="/image/sleep1.png" width="21wx" height="21wx"></bui-image>
@@ -65,13 +65,16 @@ export default {
                 this.getYunFile()
             }
         }
-        this.getYunFile()
+        this.getStorage(() => {
+            this.getYunFile()
+        })
     },
     methods: {
         getStorage(callback) {
             storage.getItem('yunFileJLocalData', res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
+                    this.yunFileReleArr = data
                     this.isShowRE = true
                     this.isErrorRele = true
                 } else {
