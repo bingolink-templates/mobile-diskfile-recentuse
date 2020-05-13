@@ -71,7 +71,7 @@ export default {
     },
     methods: {
         getStorage(callback) {
-            storage.getItem('yunFileJLocalData', res => {
+            storage.getItem('yunFileJLocalData2020513', res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     this.yunFileReleArr = data
@@ -137,7 +137,7 @@ export default {
                                 let fileObj = {}
                                 const element = res.rows[index];
                                 fileObj['name'] = element.name
-                                fileObj['id'] = element.fileId
+                                fileObj['id'] = element.id
                                 if (element.type == 'D') {
                                     fileObj['isExitDoc'] = false
                                     fileObj['image'] = '/image/folder2.png'
@@ -148,7 +148,7 @@ export default {
                                 fileArr.push(fileObj)
                             }
                             this.yunFileReleArr = fileArr
-                            storage.setItem('yunFileJLocalData', JSON.stringify(fileArr))
+                            storage.setItem('yunFileJLocalData2020513', JSON.stringify(fileArr))
                         } catch (error) {
                         }
                         this.broadcastWidgetHeight()
