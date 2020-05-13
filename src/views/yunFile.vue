@@ -12,9 +12,9 @@
                 </div>
                 <div class="prl30">
                     <div v-if='isShowRE'>
-                        <div v-if='yunFileReleArr.length != 0' v-bind:style="{'height': $isIPad ? '200wx': '400px'}">
+                        <div v-if='yunFileReleArr.length != 0' class='disk' v-bind:style="{'height': $isIPad ? '200wx': '400px'}">
                             <div class="flex-dr flex-ac" v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id)' v-bind:style="{'height': $isIPad ? '40wx': '80px'}">
-                                <bui-image :src="item.image" width="26wx" height="26wx" @click='yunFileUserEvent(item.id)'></bui-image>
+                                <bui-image :src="item.image" width="26wx" height="26wx" radius='10px'  @click='yunFileUserEvent(item.id)'></bui-image>
                                 <text class="f24 c51 fw4 pl20 lines1">{{item.name}}</text>
                             </div>
                         </div>
@@ -215,5 +215,8 @@ export default {
 
 .center-height {
     line-height: 20wx;
+}
+.disk {
+    overflow: hidden;
 }
 </style>
