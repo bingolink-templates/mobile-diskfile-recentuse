@@ -84,7 +84,7 @@ export default {
             })
         },
         yunFileMoreEvent() {
-            link.launchLinkService(['[OpenBuiltIn] \n key=MyDisk'], (res) => { }, (err) => { });
+            link.launchLinkService(['[OpenBuiltIn] \n key=ShareToMeList'], (res) => { }, (err) => { });
         },
         yunFileUserEvent(id) {
             link.launchLinkService(['[OpenBuiltIn] \n key=DiskDetail \n diskId=' + id], (res) => { }, (err) => { });
