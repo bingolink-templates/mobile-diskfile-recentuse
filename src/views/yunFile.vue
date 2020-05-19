@@ -126,8 +126,14 @@ export default {
             link.getServerConfigs([], (params) => {
                 link.getLoginInfo([], (user) => {
                     let url = params.diskUrl ? params.diskUrl : params.diskUri
+                    let objDataTo = {
+                        by: '',
+                        to: 'U' + user.userId,
+                        scope: ''
+                    }
                     linkapi.get({
-                        url: url + '/openapi/file/list?path=%2FPrivate&bounds=%7B%22offset%22%3A0%2C%22limit%22%3A200%7D',
+                        url: url + '/openapi/file/share/list',
+                        data: objDataTo
                     }).then((res) => {
                         try {
                             this.isShowRE = true
