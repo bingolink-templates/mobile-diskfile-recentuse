@@ -47,6 +47,7 @@ export default {
             i18n: '',
             themeColor: '',
             $isIPad: false,
+            urlParams: {}
         }
     },
     created() {
@@ -58,6 +59,7 @@ export default {
             this.themeColor = res.background_color;
         })
         this.$isIPad = this.$isIPad()
+        this.urlParams = this.resolveUrlParams(weex.config.bundleUrl)
     },
     mounted() {
         this.channel.onmessage = (event) => {
@@ -71,7 +73,9 @@ export default {
     },
     methods: {
         getStorage(callback) {
-            storage.getItem('yunFileJLocalData2020513', res => {
+            let pageId = this.urlParams.userId ? this.urlParams.userId : ''
+            let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
+            storage.getItem('yunFileJLocalDataRecen' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     this.yunFileReleArr = data
@@ -154,7 +158,9 @@ export default {
                                 fileArr.push(fileObj)
                             }
                             this.yunFileReleArr = fileArr
-                            storage.setItem('yunFileJLocalData2020513', JSON.stringify(fileArr))
+                            let pageId = this.urlParams.userId ? this.urlParams.userId : ''
+                            let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
+                            storage.setItem('yunFileJLocalDataRecen' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
                         }
                         this.broadcastWidgetHeight()
@@ -183,6 +189,28 @@ export default {
                 });
             });
         },
+        resolveUrlParams(url) {
+            if (!url) return {};
+            url = url + "";
+            var index = url.indexOf("?");
+            if (index > -1) {
+                url = url.substring(index + 1, url.length);
+            }
+            var pairs = url.split("&"),
+                params = {};
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i];
+                var indexEq = pair.indexOf("="),
+                    key = pair,
+                    value = null;
+                if (indexEq > 0) {
+                    key = pair.substring(0, indexEq);
+                    value = pair.substring(indexEq + 1, pair.length);
+                }
+                params[key] = value;
+            }
+            return params;
+        },
         broadcastWidgetHeight() {
             let _params = this.$getPageParams();
             // 防止高度通知失败
@@ -201,6 +229,7 @@ export default {
 <style>
 .yun-file {
     background-color: #fff;
+    height: 262wx;
 }
 
 .line {
@@ -215,7 +244,7 @@ export default {
 }
 
 .no-file {
-    height: 70wx;
+    height: 200wx;
     flex: 1;
 }
 
