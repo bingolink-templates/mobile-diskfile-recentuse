@@ -117,7 +117,7 @@ export default {
             storage.getItem('yunFileJLocalDataRecen2020528' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
-                    if (data.length == 0) {
+                    if (data.length == 0 && ecode == 'localhost') {
                         this.yunFileReleArr = this.empty
                     } else {
                         this.yunFileReleArr = data
@@ -134,9 +134,9 @@ export default {
             link.launchLinkService(['[OpenBuiltIn] \n key=ShareToMeList'], (res) => { }, (err) => { });
         },
         yunFileUserEvent(id, name) {
-            if(id.indexOf('https://') > -1 || id.indexOf('http://') > -1 ){
+            if (id.indexOf('https://') > -1 || id.indexOf('http://') > -1) {
                 linkapi.openLinkBroswer(name, id)
-            }else {
+            } else {
                 link.launchLinkService(['[OpenBuiltIn] \n key=DiskDetail \n diskId=' + id], (res) => { }, (err) => { });
             }
         },
@@ -205,13 +205,13 @@ export default {
                                 }
                                 fileArr.push(fileObj)
                             }
-                            if (fileArr.length == 0) {
+                            let pageId = this.urlParams.userId ? this.urlParams.userId : ''
+                            let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
+                            if (fileArr.length == 0 && ecode == 'localhost') {
                                 this.yunFileReleArr = this.empty
                             } else {
                                 this.yunFileReleArr = fileArr
                             }
-                            let pageId = this.urlParams.userId ? this.urlParams.userId : ''
-                            let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
                             storage.setItem('yunFileJLocalDataRecen2020528' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
                         }
