@@ -12,9 +12,9 @@
                 </div>
                 <div class="prl30">
                     <div v-if='isShowRE'>
-                        <div v-if='yunFileReleArr.length != 0' class='disk' v-bind:style="{'height': $isIPad ? '200wx': '400px'}">
-                            <div class="flex-dr flex-ac" v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id)' v-bind:style="{'height': $isIPad ? '40wx': '80px'}">
-                                <bui-image :src="item.image" width="26wx" height="26wx" radius='10px'  @click='yunFileUserEvent(item.id)'></bui-image>
+                        <div v-if='yunFileReleArr.length != 0' v-bind:style="{'height': $isIPad ? '240wx': '480px'}">
+                            <div class="flex-dr flex-ac" v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id, item.name)' v-bind:style="{'height': $isIPad ? '40wx': '80px'}">
+                                <bui-image :src="item.image" width="26wx" height="26wx" radius='10px' @click='yunFileUserEvent(item.id, item.name)'></bui-image>
                                 <text class="f24 c51 fw4 pl20 lines1">{{item.name}}</text>
                             </div>
                         </div>
@@ -47,7 +47,45 @@ export default {
             i18n: '',
             themeColor: '',
             $isIPad: false,
-            urlParams: {}
+            urlParams: {},
+            empty: [
+                {
+                    name: '注册与安装',
+                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_0.html',
+                    image: '/image/word.png',
+                    isExitDoc: true
+                },
+                {
+                    name: '销售管理（CRM）',
+                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_1.html',
+                    image: '/image/word.png',
+                    isExitDoc: true
+                },
+                {
+                    name: '进销存',
+                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_2.html',
+                    image: '/image/excel.png',
+                    isExitDoc: true
+                },
+                {
+                    name: '项目协作',
+                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_3.html',
+                    image: '/image/txt.png',
+                    isExitDoc: true
+                },
+                {
+                    name: '协同办公',
+                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_4.html',
+                    image: '/image/word.png',
+                    isExitDoc: true
+                },
+                {
+                    name: '高级账款',
+                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_5.html',
+                    image: '/image/excel.png',
+                    isExitDoc: true
+                }
+            ]
         }
     },
     created() {
@@ -62,23 +100,28 @@ export default {
         this.urlParams = this.resolveUrlParams(weex.config.bundleUrl)
     },
     mounted() {
+        var that = this
         this.channel.onmessage = (event) => {
             if (event.data.action === 'RefreshData') {
                 this.getYunFile()
             }
         }
         this.getStorage(() => {
-            this.getYunFile()
+            that.getYunFile()
         })
     },
     methods: {
         getStorage(callback) {
             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-            storage.getItem('yunFileJLocalDataRecen' + ecode + pageId, res => {
+            storage.getItem('yunFileJLocalDataRecen2020528' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
-                    this.yunFileReleArr = data
+                    if (data.length == 0) {
+                        this.yunFileReleArr = this.empty
+                    } else {
+                        this.yunFileReleArr = data
+                    }
                     this.isShowRE = true
                     this.isErrorRele = true
                     this.broadcastWidgetHeight()
@@ -90,8 +133,12 @@ export default {
         yunFileMoreEvent() {
             link.launchLinkService(['[OpenBuiltIn] \n key=ShareToMeList'], (res) => { }, (err) => { });
         },
-        yunFileUserEvent(id) {
-            link.launchLinkService(['[OpenBuiltIn] \n key=DiskDetail \n diskId=' + id], (res) => { }, (err) => { });
+        yunFileUserEvent(id, name) {
+            if(id.indexOf('https://') > -1 || id.indexOf('http://') > -1 ){
+                linkapi.openLinkBroswer(name, id)
+            }else {
+                link.launchLinkService(['[OpenBuiltIn] \n key=DiskDetail \n diskId=' + id], (res) => { }, (err) => { });
+            }
         },
         getFileImages(ext) {
             let fileImageTypes = {
@@ -133,7 +180,8 @@ export default {
                     let objDataTo = {
                         by: '',
                         to: 'U' + user.userId,
-                        scope: ''
+                        scope: '',
+                        limit: 6
                     }
                     linkapi.get({
                         url: url + '/openapi/file/share/list',
@@ -147,7 +195,7 @@ export default {
                                 let fileObj = {}
                                 const element = res.rows[index];
                                 fileObj['name'] = element.name
-                                fileObj['id'] = element.id
+                                fileObj['id'] = element.fileId ? element.fileId : element.id
                                 if (element.type == 'D') {
                                     fileObj['isExitDoc'] = false
                                     fileObj['image'] = '/image/folder2.png'
@@ -157,10 +205,14 @@ export default {
                                 }
                                 fileArr.push(fileObj)
                             }
-                            this.yunFileReleArr = fileArr
+                            if (fileArr.length == 0) {
+                                this.yunFileReleArr = this.empty
+                            } else {
+                                this.yunFileReleArr = fileArr
+                            }
                             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
                             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-                            storage.setItem('yunFileJLocalDataRecen' + ecode + pageId, JSON.stringify(fileArr))
+                            storage.setItem('yunFileJLocalDataRecen2020528' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
                         }
                         this.broadcastWidgetHeight()
@@ -229,7 +281,7 @@ export default {
 <style>
 .yun-file {
     background-color: #fff;
-    height: 262wx;
+    height: 302wx;
 }
 
 .line {
@@ -244,14 +296,11 @@ export default {
 }
 
 .no-file {
-    height: 200wx;
+    height: 240wx;
     flex: 1;
 }
 
 .center-height {
     line-height: 20wx;
-}
-.disk {
-    overflow: hidden;
 }
 </style>
