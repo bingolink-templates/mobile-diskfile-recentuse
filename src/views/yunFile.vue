@@ -49,37 +49,37 @@ export default {
             urlParams: {},
             empty: [
                 {
-                    name: '应用安装指南：注册与安装',
+                    name: '聆客安装指南：注册与安装',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_0.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '聆客使用指南：销售管理（CRM）',
+                    name: '聆客快速使用指南：销售管理（CRM）',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_1.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '聆客使用指南：进销存',
+                    name: '聆客快速使用指南：进销存',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_2.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '聆客使用指南：项目协作',
+                    name: '聆客快速使用指南：项目协作',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_3.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '聆客使用指南：协同办公',
+                    name: '聆客快速使用指南：协同办公',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_4.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '聆客使用指南：高级账款',
+                    name: '聆客快速使用指南：高级账款',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_5.html',
                     image: '/image/word.png',
                     isExitDoc: true
