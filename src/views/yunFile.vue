@@ -1,7 +1,7 @@
 <template>
     <div ref="wrap">
         <!-- 云盘 -->
-        <div class="yun-file">
+        <div class="yun-file" v-bind:style="{'height': $isIPad ? '302wx': '604px'}">
             <div class="pb20">
                 <div class="yun-file-title flex" v-bind:style="{'height': $isIPad ? '44wx': '88px', 'margin-bottom': $isIPad ? '7wx': '15px'}">
                     <div class="title flex">
@@ -114,7 +114,7 @@ export default {
         getStorage(callback) {
             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-            storage.getItem('yunFileJLocalDataRecen2020528' + ecode + pageId, res => {
+            storage.getItem('yunFileJLocalDataRecen2020529' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     if (data.length == 0 && ecode == 'localhost') {
@@ -134,6 +134,7 @@ export default {
             link.launchLinkService(['[OpenBuiltIn] \n key=ShareToMeList'], (res) => { }, (err) => { });
         },
         yunFileUserEvent(id, name) {
+            if(!id) return
             if (id.indexOf('https://') > -1 || id.indexOf('http://') > -1) {
                 linkapi.openLinkBroswer(name, id)
             } else {
@@ -195,7 +196,7 @@ export default {
                                 let fileObj = {}
                                 const element = res.rows[index];
                                 fileObj['name'] = element.name
-                                fileObj['id'] = element.fileId ? element.fileId : element.id
+                                fileObj['id'] = element.fileId || element.id || ''
                                 if (element.type == 'D') {
                                     fileObj['isExitDoc'] = false
                                     fileObj['image'] = '/image/folder2.png'
@@ -212,8 +213,10 @@ export default {
                             } else {
                                 this.yunFileReleArr = fileArr
                             }
-                            storage.setItem('yunFileJLocalDataRecen2020528' + ecode + pageId, JSON.stringify(fileArr))
+                            storage.setItem('yunFileJLocalDataRecen2020529' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
+                            this.isErrorRele = false
+                            this.yunFileReleArr = []
                         }
                         this.broadcastWidgetHeight()
                     }, (err) => {
@@ -281,7 +284,6 @@ export default {
 <style>
 .yun-file {
     background-color: #fff;
-    height: 302wx;
 }
 
 .line {
