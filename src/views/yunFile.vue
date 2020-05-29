@@ -64,13 +64,13 @@ export default {
                 {
                     name: '进销存',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_2.html',
-                    image: '/image/excel.png',
+                    image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
                     name: '项目协作',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_3.html',
-                    image: '/image/txt.png',
+                    image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
@@ -82,7 +82,7 @@ export default {
                 {
                     name: '高级账款',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_5.html',
-                    image: '/image/excel.png',
+                    image: '/image/word.png',
                     isExitDoc: true
                 }
             ]
@@ -114,7 +114,7 @@ export default {
         getStorage(callback) {
             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-            storage.getItem('yunFileJLocalDataRecen2020529' + ecode + pageId, res => {
+            storage.getItem('yunFileJLocalDataRecen20205291' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     if (data.length == 0 && ecode == 'localhost') {
@@ -213,7 +213,7 @@ export default {
                             } else {
                                 this.yunFileReleArr = fileArr
                             }
-                            storage.setItem('yunFileJLocalDataRecen2020529' + ecode + pageId, JSON.stringify(fileArr))
+                            storage.setItem('yunFileJLocalDataRecen20205291' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
                             this.isErrorRele = false
                             this.yunFileReleArr = []
