@@ -114,7 +114,7 @@ export default {
         getStorage(callback) {
             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-            storage.getItem('yunFileJLocalDataRecen20205291' + ecode + pageId, res => {
+            storage.getItem('yunFileJLocalDataRecen20205292' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     if (data.length == 0 && ecode == 'localhost') {
@@ -213,8 +213,9 @@ export default {
                             } else {
                                 this.yunFileReleArr = fileArr
                             }
-                            storage.setItem('yunFileJLocalDataRecen20205291' + ecode + pageId, JSON.stringify(fileArr))
+                            storage.setItem('yunFileJLocalDataRecen20205292' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
+                            this.isShowRE = true
                             this.isErrorRele = false
                             this.yunFileReleArr = []
                         }
