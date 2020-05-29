@@ -20,7 +20,6 @@
                         </div>
                         <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
                             <div class="flex-dr">
-                                <bui-image src="/image/sleep1.png" width="21wx" height="21wx"></bui-image>
                                 <text class="f26 c51 fw4 pl15 center-height ">{{isErrorRele?i18n.NoneData:i18n.ErrorLoadData}}</text>
                             </div>
                         </div>
@@ -50,37 +49,37 @@ export default {
             urlParams: {},
             empty: [
                 {
-                    name: '注册与安装',
+                    name: '应用安装指南：注册与安装',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_0.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '销售管理（CRM）',
+                    name: '聆客使用指南：销售管理（CRM）',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_1.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '进销存',
+                    name: '聆客使用指南：进销存',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_2.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '项目协作',
+                    name: '聆客使用指南：项目协作',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_3.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '协同办公',
+                    name: '聆客使用指南：协同办公',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_4.html',
                     image: '/image/word.png',
                     isExitDoc: true
                 },
                 {
-                    name: '高级账款',
+                    name: '聆客使用指南：高级账款',
                     id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_5.html',
                     image: '/image/word.png',
                     isExitDoc: true
