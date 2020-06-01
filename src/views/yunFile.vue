@@ -47,6 +47,7 @@ export default {
             themeColor: '',
             $isIPad: false,
             urlParams: {},
+            noData: false,
             empty: [
                 {
                     name: '聆客安装指南：注册与安装',
@@ -117,8 +118,10 @@ export default {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     if (data.length == 0 && ecode == 'localhost') {
+                        this.noData = true
                         this.yunFileReleArr = this.empty
                     } else {
+                        this.noData = false
                         this.yunFileReleArr = data
                     }
                     this.isShowRE = true
@@ -130,6 +133,17 @@ export default {
             })
         },
         yunFileMoreEvent() {
+            if(this.noData){
+                let runApp = {
+                    appCode: 'bingo_share_me_more',
+                    data: {
+                        title: this.i18n.RecentlyUsedFile
+                    }
+                }
+                // 打开应用的方式
+                linkapi.runApp(runApp)
+                return
+            }
             link.launchLinkService(['[OpenBuiltIn] \n key=ShareToMeList'], (res) => { }, (err) => { });
         },
         yunFileUserEvent(id, name) {
@@ -208,8 +222,10 @@ export default {
                             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
                             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
                             if (fileArr.length == 0 && ecode == 'localhost') {
+                                this.noData = true
                                 this.yunFileReleArr = this.empty
                             } else {
+                                this.noData = false
                                 this.yunFileReleArr = fileArr
                             }
                             storage.setItem('yunFileJLocalDataRecen20205292' + ecode + pageId, JSON.stringify(fileArr))
