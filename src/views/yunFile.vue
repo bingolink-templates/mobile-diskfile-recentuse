@@ -133,21 +133,30 @@ export default {
             })
         },
         yunFileMoreEvent() {
-            if(this.noData){
-                let runApp = {
+            var that = this
+            if (this.noData) {
+                let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
+                let packageCodes = [{
                     appCode: 'bingo_share_me_more',
-                    data: {
-                        title: this.i18n.RecentlyUsedFile
+                    eCode: ecode
+                }]
+                link.checkForUpdatePackages([{ "packages": packageCodes }], function (res) {
+                    let runApp = {
+                        appCode: 'bingo_share_me_more',
+                        data: {
+                            title: that.i18n.RecentlyUsedFile
+                        }
                     }
-                }
-                // 打开应用的方式
-                linkapi.runApp(runApp)
+                    // 打开应用的方式
+                    linkapi.runApp(runApp)
+                }, function () {
+                });
                 return
             }
             link.launchLinkService(['[OpenBuiltIn] \n key=ShareToMeList'], (res) => { }, (err) => { });
         },
         yunFileUserEvent(id, name) {
-            if(!id) return
+            if (!id) return
             if (id.indexOf('https://') > -1 || id.indexOf('http://') > -1) {
                 linkapi.openLinkBroswer(name, id)
             } else {
