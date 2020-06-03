@@ -1,16 +1,18 @@
 <template>
     <div ref="wrap">
+        <bui-header v-if='isMore' :title="i18n.RecentlyUsedFile" :leftItem="leftItem" @leftClick="back">
+        </bui-header>
         <!-- 云盘 -->
         <div class="yun-file" v-bind:style="{'height': $isIPad ? '302wx': '604px'}">
             <div class="pb20">
-                <div class="yun-file-title flex" v-bind:style="{'height': $isIPad ? '44wx': '88px', 'margin-bottom': $isIPad ? '7wx': '15px'}">
+                <div v-if='!isMore' class="yun-file-title flex" v-bind:style="{'height': $isIPad ? '44wx': '88px', 'margin-bottom': $isIPad ? '7wx': '15px'}">
                     <div class="title flex">
                         <span class="line" v-bind:style="{'background-color': themeColor}"></span>
                         <text class="c0 f30">{{i18n.RecentlyUsedFile}}</text>
                     </div>
                     <text class="f24 c153 fw4 pl20 pt10 pb10" @click="yunFileMoreEvent">{{i18n.All}}</text>
                 </div>
-                <div class="prl30">
+                <div class="prl30" v-bind:style="{'paddingTop': isMore ? '10px': '0'}">
                     <div v-if='isShowRE'>
                         <div v-if='yunFileReleArr.length != 0' v-bind:style="{'height': $isIPad ? '240wx': '480px'}">
                             <div class="flex-dr flex-ac" v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id, item.name)' v-bind:style="{'height': $isIPad ? '40wx': '80px'}">
@@ -48,6 +50,10 @@ export default {
             $isIPad: false,
             urlParams: {},
             noData: false,
+            isMore: false,
+            leftItem: {
+                icon: 'ion-chevron-left',
+            },
             empty: [
                 {
                     name: '聆客安装指南：注册与安装',
@@ -98,6 +104,7 @@ export default {
         })
         this.$isIPad = this.$isIPad()
         this.urlParams = this.resolveUrlParams(weex.config.bundleUrl)
+        this.isMore = this.urlParams.isMore || false
     },
     mounted() {
         var that = this
@@ -135,22 +142,13 @@ export default {
         yunFileMoreEvent() {
             var that = this
             if (this.noData) {
-                let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-                let packageCodes = [{
-                    appCode: 'bingo_share_me_more',
-                    eCode: ecode
-                }]
-                link.checkForUpdatePackages([{ "packages": packageCodes }], function (res) {
-                    let runApp = {
-                        appCode: 'bingo_share_me_more',
-                        data: {
-                            title: that.i18n.RecentlyUsedFile
-                        }
+                let runApp = {
+                    appCode: 'widget-diskfile-recentuse',
+                    data: {
+                        isMore: true
                     }
-                    // 打开应用的方式
-                    linkapi.runApp(runApp)
-                }, function () {
-                });
+                }
+                linkapi.runApp(runApp)
                 return
             }
             link.launchLinkService(['[OpenBuiltIn] \n key=ShareToMeList'], (res) => { }, (err) => { });
@@ -195,6 +193,10 @@ export default {
             } else {
                 return fileImages['unknow'];
             }
+        },
+        back: function () {
+            // 返回上一个页面
+            this.$pop();
         },
         getYunFile() {
             link.getServerConfigs([], (params) => {
