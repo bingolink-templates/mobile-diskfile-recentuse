@@ -38,6 +38,8 @@ const linkapi = require("linkapi");
 const dom = weex.requireModule('dom');
 const util = require('ser/util')
 const storage = weex.requireModule('storage');
+const globalEvent = weex.requireModule('globalEvent');
+const navigator = weex.requireModule('navigator');
 export default {
     data() {
         return {
@@ -116,6 +118,9 @@ export default {
         this.getStorage(() => {
             that.getYunFile()
         })
+        globalEvent.addEventListener("androidback", function (e) {
+            navigator.close()
+        });
     },
     methods: {
         getStorage(callback) {
