@@ -15,8 +15,8 @@
                 <div class="prl30" v-bind:style="{'paddingTop': isMore ? '10px': '0'}">
                     <div v-if='isShowRE'>
                         <div v-if='yunFileReleArr.length != 0' v-bind:style="{'height': $isIPad ? '240wx': '480px'}">
-                            <div class="flex-dr flex-ac" v-if='item.isExitDoc' v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id, item.name)' v-bind:style="{'height': $isIPad ? '40wx': '80px'}">
-                                <bui-image :src="item.image" width="26wx" height="26wx" radius='10px' @click='yunFileUserEvent(item.id, item.name)'></bui-image>
+                            <div class="flex-dr flex-ac" v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id, item.name, item.isExitDoc, item.dir)' v-bind:style="{'height': $isIPad ? '40wx': '80px'}">
+                                <bui-image :src="item.image" width="26wx" height="26wx" radius='10px' @click='yunFileUserEvent(item.id, item.name, item.isExitDoc, item.dir)'></bui-image>
                                 <text class="f24 c51 fw4 pl20 lines1">{{item.name}}</text>
                             </div>
                         </div>
@@ -126,7 +126,7 @@ export default {
         getStorage(callback) {
             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-            storage.getItem('yunFileJLocalDataRecen20205292' + ecode + pageId, res => {
+            storage.getItem('yunFileJLocalDataRecen202065' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     if (data.length == 0 && ecode == 'localhost') {
@@ -158,7 +158,11 @@ export default {
             }
             link.launchLinkService(['[OpenBuiltIn] \n key=ShareToMeList'], (res) => { }, (err) => { });
         },
-        yunFileUserEvent(id, name) {
+        yunFileUserEvent(id, name, isExitDoc, item) {
+            if (!isExitDoc) {
+                link.startSharedDirectory([{model: item}])
+                return
+            }
             if (!id) return
             if (id.indexOf('https://') > -1 || id.indexOf('http://') > -1) {
                 linkapi.openLinkBroswer(name, id)
@@ -228,6 +232,7 @@ export default {
                                 fileObj['id'] = element.fileId || element.id || ''
                                 if (element.type == 'D') {
                                     fileObj['isExitDoc'] = false
+                                    fileObj['dir'] = element
                                     fileObj['image'] = '/image/folder2.png'
                                 } else {
                                     fileObj['isExitDoc'] = true
@@ -244,7 +249,7 @@ export default {
                                 this.noData = false
                                 this.yunFileReleArr = fileArr
                             }
-                            storage.setItem('yunFileJLocalDataRecen20205292' + ecode + pageId, JSON.stringify(fileArr))
+                            storage.setItem('yunFileJLocalDataRecen202065' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
                             this.isShowRE = true
                             this.isErrorRele = false
