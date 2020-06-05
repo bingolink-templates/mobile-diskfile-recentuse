@@ -126,7 +126,12 @@ export default {
         getStorage(callback) {
             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-            storage.getItem('yunFileJLocalDataRecen202065' + ecode + pageId, res => {
+            if (this.isMore) {
+                this.noData = true
+                this.yunFileReleArr = this.empty
+                return
+            }
+            storage.getItem('yunFileJLocalDataRecen2020651' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     if (data.length == 0 && ecode == 'localhost') {
@@ -160,7 +165,7 @@ export default {
         },
         yunFileUserEvent(id, name, isExitDoc, item) {
             if (!isExitDoc) {
-                link.startSharedDirectory([{model: item}])
+                link.startSharedDirectory([{ model: item }])
                 return
             }
             if (!id) return
@@ -208,6 +213,9 @@ export default {
             this.$pop();
         },
         getYunFile() {
+            if (this.isMore) {
+                return
+            }
             link.getServerConfigs([], (params) => {
                 link.getLoginInfo([], (user) => {
                     let url = params.diskUrl ? params.diskUrl : params.diskUri
@@ -249,7 +257,7 @@ export default {
                                 this.noData = false
                                 this.yunFileReleArr = fileArr
                             }
-                            storage.setItem('yunFileJLocalDataRecen202065' + ecode + pageId, JSON.stringify(fileArr))
+                            storage.setItem('yunFileJLocalDataRecen2020651' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
                             this.isShowRE = true
                             this.isErrorRele = false
