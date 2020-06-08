@@ -131,7 +131,7 @@ export default {
                 this.yunFileReleArr = this.empty
                 return
             }
-            storage.getItem('yunFileJLocalDataRecen2020651' + ecode + pageId, res => {
+            storage.getItem('yunFileJLocalDataRecen202068' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     if (data.length == 0 && ecode == 'localhost') {
@@ -257,7 +257,7 @@ export default {
                                 this.noData = false
                                 this.yunFileReleArr = fileArr
                             }
-                            storage.setItem('yunFileJLocalDataRecen2020651' + ecode + pageId, JSON.stringify(fileArr))
+                            storage.setItem('yunFileJLocalDataRecen202068' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
                             this.isShowRE = true
                             this.isErrorRele = false
