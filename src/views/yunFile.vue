@@ -22,7 +22,7 @@
                         </div>
                         <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
                             <div class="flex-dr">
-                                <text class="f26 c51 fw4 pl15 center-height ">{{isErrorRele?i18n.NoneData:i18n.ErrorLoadData}}</text>
+                                <text class="f26 c51 fw4 pl15 center-height" v-bind:style="{'lineHeight': $isIPad ? '240wx': '480px'}">{{isErrorRele?i18n.NoneData:i18n.ErrorLoadData}}</text>
                             </div>
                         </div>
                     </div>
@@ -115,23 +115,27 @@ export default {
                 this.getYunFile()
             }
         }
-        this.getStorage(() => {
+        this.getStorage(function () {
             that.getYunFile()
         })
-        globalEvent.addEventListener("androidback", function (e) {
-            navigator.close()
-        });
+        if (this.$isAndroid()) {
+            globalEvent.addEventListener("androidback", function (e) {
+                navigator.close()
+            });
+        }
     },
     methods: {
         getStorage(callback) {
             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
             if (this.isMore) {
+                this.isShowRE = true
                 this.noData = true
                 this.yunFileReleArr = this.empty
                 return
             }
-            storage.getItem('yunFileJLocalDataRecen202068' + ecode + pageId, res => {
+            // 'shareMebig202068' 'shareMebig202068'
+            storage.getItem('shareMebig202068' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
                     if (data.length == 0 && ecode == 'localhost') {
@@ -144,6 +148,9 @@ export default {
                     this.isShowRE = true
                     this.isErrorRele = true
                     this.broadcastWidgetHeight()
+                    setTimeout(() => {
+                        this.getYunFile()
+                    }, 2000)
                 } else {
                     callback()
                 }
@@ -257,17 +264,16 @@ export default {
                                 this.noData = false
                                 this.yunFileReleArr = fileArr
                             }
-                            storage.setItem('yunFileJLocalDataRecen202068' + ecode + pageId, JSON.stringify(fileArr))
+                            storage.setItem('shareMebig202068' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
+                            this.noData = false
                             this.isShowRE = true
                             this.isErrorRele = false
                             this.yunFileReleArr = []
                         }
                         this.broadcastWidgetHeight()
                     }, (err) => {
-                        this.isShowRE = true
-                        this.isErrorRele = false
-                        this.broadcastWidgetHeight()
+                        this.error()
                     })
                 }, (err) => {
                     this.error()
@@ -277,6 +283,8 @@ export default {
             });
         },
         error() {
+            this.yunFileReleArr = []
+            this.noData = false
             this.isShowRE = true
             this.isErrorRele = false
             this.broadcastWidgetHeight()
@@ -348,6 +356,6 @@ export default {
 }
 
 .center-height {
-    line-height: 20wx;
+    /* line-height: 240wx; */
 }
 </style>
