@@ -3,7 +3,7 @@
         <bui-header v-if='isMore' :title="i18n.RecentlyUsedFile" :leftItem="leftItem" @leftClick="back">
         </bui-header>
         <!-- 云盘 -->
-        <div class="yun-file" v-bind:style="{'height': $isIPad ? '302wx': '604px'}">
+        <div class="yun-file" v-bind:style="{'height': $isIPad ? '332wx': '664px'}">
             <div class="pb20">
                 <div v-if='!isMore' class="yun-file-title flex" v-bind:style="{'height': $isIPad ? '44wx': '88px', 'margin-bottom': $isIPad ? '7wx': '15px'}">
                     <div class="title flex">
@@ -14,10 +14,10 @@
                 </div>
                 <div class="prl30" v-bind:style="{'paddingTop': isMore ? '10px': '0'}">
                     <div v-if='isShowRE'>
-                        <div v-if='yunFileReleArr.length != 0' v-bind:style="{'height': $isIPad ? '240wx': '480px'}">
-                            <div class="flex-dr flex-ac" v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id, item.name, item.isExitDoc, item.dir)' v-bind:style="{'height': $isIPad ? '40wx': '80px'}">
+                        <div v-if='yunFileReleArr.length != 0' v-bind:style="{'height': $isIPad ? '270wx': '540px'}">
+                            <div class="flex-dr flex-ac" v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id, item.name, item.isExitDoc, item.dir)' v-bind:style="{'height': $isIPad ? '40wx': '90px'}">
                                 <bui-image :src="item.image" width="26wx" height="26wx" radius='10px' @click='yunFileUserEvent(item.id, item.name, item.isExitDoc, item.dir)'></bui-image>
-                                <text class="f24 c51 fw4 pl20 lines1">{{item.name}}</text>
+                                <text class="f28 c51 fw4 pl20 lines1">{{item.name}}</text>
                             </div>
                         </div>
                         <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
