@@ -307,15 +307,8 @@ export default {
     background-color: #fff;
 }
 
-.line {
-    width: 5px;
-    height: 36px;
-    margin-right: 12px;
-}
-
 .yun-file-title {
     padding: 0 18wx;
-    border-bottom: 1px solid #f2f2f2;
 }
 
 .no-file {
