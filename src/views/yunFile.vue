@@ -26,7 +26,8 @@
                             </div>
                         </div>
                         <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
-                            <text class="f32 c0 fw4 pl15">{{isErrorRele?i18n.NoneData:i18n.ErrorLoadData}}</text>
+                            <bui-image src="/image/nodata.png" width="109wx" height="70wx" style="margin-bottom: 16wx"></bui-image>
+                            <text class="f32 c45 fw4 pl15">{{isErrorRele?i18n.NoneData:i18n.ErrorLoadData}}</text>
                         </div>
                     </div>
                 </div>
