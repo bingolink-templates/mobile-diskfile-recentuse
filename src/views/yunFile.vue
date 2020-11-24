@@ -1,29 +1,32 @@
 <template>
-    <div ref="wrap">
-        <bui-header v-if='isMore' :title="i18n.RecentlyUsedFile" :leftItem="leftItem" @leftClick="back">
-        </bui-header>
+    <div ref="wrap" class="main">
         <!-- 云盘 -->
-        <div class="yun-file" v-bind:style="{'height': $isIPad ? '332wx': '664px'}">
+        <div class="yun-file">
             <div class="pb20">
-                <div v-if='!isMore' class="yun-file-title flex" v-bind:style="{'height': $isIPad ? '44wx': '88px', 'margin-bottom': $isIPad ? '7wx': '15px'}">
+                <div class="yun-file-title flex" v-bind:style="{'height': $isIPad ? '47wx': '94px'}">
                     <div class="title flex">
-                        <span class="line" v-bind:style="{'background-color': themeColor}"></span>
-                        <text class="c0 f30">{{i18n.RecentlyUsedFile}}</text>
+                        <text class="c06 f30">{{i18n.RecentlyUsedFile}}</text>
                     </div>
-                    <text class="f24 c153 fw4 pl20 pt10 pb10" @click="yunFileMoreEvent">{{i18n.All}}</text>
+                    <bui-image src="/image/more.png" width="18wx" height="18wx" @click="yunFileMoreEvent"></bui-image>
                 </div>
-                <div class="prl30" v-bind:style="{'paddingTop': isMore ? '10px': '0'}">
+                <div class="prl36">
                     <div v-if='isShowRE'>
-                        <div v-if='yunFileReleArr.length != 0' v-bind:style="{'height': $isIPad ? '270wx': '540px'}">
-                            <div class="flex-dr flex-ac" v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id, item.name, item.isExitDoc, item.dir)' v-bind:style="{'height': $isIPad ? '40wx': '90px'}">
-                                <bui-image :src="item.image" width="26wx" height="26wx" radius='10px' @click='yunFileUserEvent(item.id, item.name, item.isExitDoc, item.dir)'></bui-image>
-                                <text class="f28 c51 fw4 pl20 lines1">{{item.name}}</text>
+                        <div v-if='yunFileReleArr.length != 0'>
+                            <div class="flex-dr flex-ac flex-sb" v-for="(item, index) in yunFileReleArr" :key='index' @click='yunFileUserEvent(item.id, item.name, item.isExitDoc, item.dir)' v-bind:style="{'height': $isIPad ? '64wx': '128px'}">
+                                <div class="flex-dr flex-ac">
+                                    <bui-image :src="item.image" width="26wx" height="26wx" radius='10px' @click='yunFileUserEvent(item.id, item.name, item.isExitDoc, item.dir)'></bui-image>
+                                    <div class="pl28">
+                                        <text class="f32 c0 fw4 lines1">{{item.name}}</text>
+                                        <text class="f24 c45 fw4 lines1 mt16" v-if="item.size">{{item.size}}</text>
+                                    </div>
+                                </div>
+                                <div>
+                                    <text class="f24 c45 fw4 mt16" v-if="item.time">{{item.time}}</text>
+                                </div>
                             </div>
                         </div>
                         <div class="no-file flex-ac flex-jc" v-if='yunFileReleArr.length == 0'>
-                            <div class="flex-dr">
-                                <text class="f26 c51 fw4 pl15 center-height" v-bind:style="{'lineHeight': $isIPad ? '240wx': '480px'}">{{isErrorRele?i18n.NoneData:i18n.ErrorLoadData}}</text>
-                            </div>
+                            <text class="f32 c0 fw4 pl15">{{isErrorRele?i18n.NoneData:i18n.ErrorLoadData}}</text>
                         </div>
                     </div>
                 </div>
@@ -50,50 +53,7 @@ export default {
             i18n: '',
             themeColor: '',
             $isIPad: false,
-            urlParams: {},
-            noData: false,
-            isMore: false,
-            leftItem: {
-                icon: 'ion-chevron-left',
-            },
-            empty: [
-                {
-                    name: '聆客安装指南：注册与安装',
-                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_0.html',
-                    image: '/image/word.png',
-                    isExitDoc: true
-                },
-                {
-                    name: '聆客快速使用指南：销售管理（CRM）',
-                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_1.html',
-                    image: '/image/word.png',
-                    isExitDoc: true
-                },
-                {
-                    name: '聆客快速使用指南：进销存',
-                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_2.html',
-                    image: '/image/word.png',
-                    isExitDoc: true
-                },
-                {
-                    name: '聆客快速使用指南：项目协作',
-                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_3.html',
-                    image: '/image/word.png',
-                    isExitDoc: true
-                },
-                {
-                    name: '聆客快速使用指南：协同办公',
-                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_4.html',
-                    image: '/image/word.png',
-                    isExitDoc: true
-                },
-                {
-                    name: '聆客快速使用指南：高级账款',
-                    id: 'https://www.bingolink.biz/web/faq/themes/themes/index6/index_6_5.html',
-                    image: '/image/word.png',
-                    isExitDoc: true
-                }
-            ]
+            urlParams: {}
         }
     },
     created() {
@@ -106,17 +66,15 @@ export default {
         })
         this.$isIPad = this.$isIPad()
         this.urlParams = this.resolveUrlParams(weex.config.bundleUrl)
-        this.isMore = this.urlParams.isMore || false
     },
     mounted() {
-        var that = this
         this.channel.onmessage = (event) => {
             if (event.data.action === 'RefreshData') {
                 this.getYunFile()
             }
         }
-        this.getStorage(function () {
-            that.getYunFile()
+        this.getStorage(() => {
+            this.getYunFile()
         })
         if (this.$isAndroid()) {
             globalEvent.addEventListener("androidback", function (e) {
@@ -128,23 +86,10 @@ export default {
         getStorage(callback) {
             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-            if (this.isMore) {
-                this.isShowRE = true
-                this.noData = true
-                this.yunFileReleArr = this.empty
-                return
-            }
-            // 'shareMebig202068' 'shareMebig202068'
-            storage.getItem('shareMebig202068' + ecode + pageId, res => {
+            storage.getItem('shareMebig20201124' + ecode + pageId, res => {
                 if (res.result == 'success') {
                     var data = JSON.parse(res.data)
-                    if (data.length == 0 && ecode == 'localhost') {
-                        this.noData = true
-                        this.yunFileReleArr = this.empty
-                    } else {
-                        this.noData = false
-                        this.yunFileReleArr = data
-                    }
+                    this.yunFileReleArr = data
                     this.isShowRE = true
                     this.isErrorRele = true
                     this.broadcastWidgetHeight()
@@ -157,17 +102,6 @@ export default {
             })
         },
         yunFileMoreEvent() {
-            var that = this
-            if (this.noData) {
-                let runApp = {
-                    appCode: 'widget-diskfile-recentuse',
-                    data: {
-                        isMore: true
-                    }
-                }
-                linkapi.runApp(runApp)
-                return
-            }
             link.launchLinkService(['[OpenBuiltIn] \n key=ShareToMeList'], (res) => { }, (err) => { });
         },
         yunFileUserEvent(id, name, isExitDoc, item) {
@@ -215,14 +149,7 @@ export default {
                 return fileImages['unknow'];
             }
         },
-        back: function () {
-            // 返回上一个页面
-            this.$pop();
-        },
         getYunFile() {
-            if (this.isMore) {
-                return
-            }
             link.getServerConfigs([], (params) => {
                 link.getLoginInfo([], (user) => {
                     let url = params.diskUrl ? params.diskUrl : params.diskUri
@@ -230,7 +157,7 @@ export default {
                         by: '',
                         to: 'U' + user.userId,
                         scope: '',
-                        limit: 6
+                        limit: 3
                     }
                     linkapi.get({
                         url: url + '/openapi/file/share/list',
@@ -245,6 +172,8 @@ export default {
                                 const element = res.rows[index];
                                 fileObj['name'] = element.name
                                 fileObj['id'] = element.fileId || element.id || ''
+                                fileObj['size'] = element.size ? this.conver(element.size) : ''
+                                fileObj['time'] = this.format(element.createdTime, 'MM-dd')
                                 if (element.type == 'D') {
                                     fileObj['isExitDoc'] = false
                                     fileObj['dir'] = element
@@ -257,16 +186,9 @@ export default {
                             }
                             let pageId = this.urlParams.userId ? this.urlParams.userId : ''
                             let ecode = this.urlParams.ecode ? this.urlParams.ecode : 'localhost'
-                            if (fileArr.length == 0 && ecode == 'localhost') {
-                                this.noData = true
-                                this.yunFileReleArr = this.empty
-                            } else {
-                                this.noData = false
-                                this.yunFileReleArr = fileArr
-                            }
-                            storage.setItem('shareMebig202068' + ecode + pageId, JSON.stringify(fileArr))
+                            this.yunFileReleArr = fileArr
+                            storage.setItem('shareMebig20201124' + ecode + pageId, JSON.stringify(fileArr))
                         } catch (error) {
-                            this.noData = false
                             this.isShowRE = true
                             this.isErrorRele = false
                             this.yunFileReleArr = []
@@ -282,9 +204,52 @@ export default {
                 this.error()
             });
         },
+        format(ts, fmt) {
+            if (!ts) return '';
+            if (!fmt) fmt = 'yyyy/MM/dd hh:mm:ss'
+            var dt = new Date(ts)
+            var o = {
+                'M+': dt.getMonth() + 1, // 月份
+                'd+': dt.getDate(), // 日
+                'h+': dt.getHours(), // 小时
+                'm+': dt.getMinutes(), // 分
+                's+': dt.getSeconds(), // 秒
+                'q+': Math.floor((dt.getMonth() + 3) / 3), // 季度
+                'S': dt.getMilliseconds() // 毫秒
+            }
+            if (/(y+)/.test(fmt)) {
+                let $1 = fmt.split('-')[0]
+                fmt = fmt.replace(RegExp.$1, (dt.getFullYear() + '').substr(4 - RegExp.$1.length))
+            }
+            for (var k in o) {
+                if (new RegExp('(' + k + ')').test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+                }
+            }
+            return fmt
+        },
+        conver(limit) {
+            var size = "";
+            if (limit < 0.1 * 1024) { //如果小于0.1KB转化成B  
+                size = limit.toFixed(2) + "B";
+            } else if (limit < 0.1 * 1024 * 1024) {//如果小于0.1MB转化成KB  
+                size = (limit / 1024).toFixed(2) + "KB";
+            } else if (limit < 0.1 * 1024 * 1024 * 1024) { //如果小于0.1GB转化成MB  
+                size = (limit / (1024 * 1024)).toFixed(2) + "MB";
+            } else { //其他转化成GB  
+                size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+            }
+
+            var sizestr = size + "";
+            var len = sizestr.indexOf("\.");
+            var dec = sizestr.substr(len + 1, 2);
+            if (dec == "00") {//当小数点后为00时 去掉小数部分  
+                return sizestr.substring(0, len) + sizestr.substr(len + 3, 2);
+            }
+            return sizestr;
+        },
         error() {
             this.yunFileReleArr = []
-            this.noData = false
             this.isShowRE = true
             this.isErrorRele = false
             this.broadcastWidgetHeight()
@@ -335,6 +300,9 @@ export default {
 
 <style lang="css" src="../css/common.css"></style>
 <style>
+.main {
+}
+
 .yun-file {
     background-color: #fff;
 }
@@ -346,16 +314,11 @@ export default {
 }
 
 .yun-file-title {
-    padding: 0 12wx;
+    padding: 0 18wx;
     border-bottom: 1px solid #f2f2f2;
 }
 
 .no-file {
-    height: 240wx;
-    flex: 1;
-}
-
-.center-height {
-    /* line-height: 240wx; */
+    height: 192wx;
 }
 </style>
